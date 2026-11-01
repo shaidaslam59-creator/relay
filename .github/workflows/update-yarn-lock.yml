@@ -16,8 +16,13 @@ jobs:
   update-yarn-lock:
     name: Update yarn.lock file
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v3
         with:
           node-version: '22'
@@ -29,5 +34,5 @@ jobs:
           title: "Update yarn.lock"
           branch: update-yarn-lock
           delete-branch: true
-          # Use a PAT with permissions to act as relay-bot and bypass branch protection
-          token: ${{ secrets.RELAY_BOT_GITHUB_PAT }}
+          # Use the run-scoped token; do not require a PAT that bypasses branch protection.
+          token: ${{ github.token }}
